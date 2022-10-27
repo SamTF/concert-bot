@@ -4,18 +4,23 @@ import requests
 from datetime import datetime
 from typing import List
 import re
+import itertools
 
 ### CLASS
 class Concert:
+    id = None
     date = None
     band = None
     time = None
     venue = None
     region = None
 
+    id_counter = itertools.count()
+
     def __init__(self, date:str, concert:str) -> None:
         self.date = self._date_from_string(date)
         self.band, self.time, self.venue, self.region = self._parse_concert_title(concert)
+        self.id = next(self.id_counter)
 
     def __repr__(self) -> str:
         date_str = datetime.strftime(self.date, '%d/%m/%y')
@@ -61,13 +66,14 @@ class Concert:
         # returning the data
         return band, time, venue, region
     
+    @property
     def shorthand(self) -> str:
         '''
         Succinct version of the concert info displaying only date and headliner.
         '''
         date_str = datetime.strftime(self.date, '%d/%m/%y')
 
-        s = f'**{date_str}** - {self.band[0]})'
+        s = f'[{self.id}] **{date_str}** - {self.band[0]})'
 
         if len(self.band) > 1:
             other_bands = len(self.band) - 1
@@ -115,4 +121,4 @@ def fetch_concerts() -> List[Concert]:
 # When running the script directly
 if __name__ == "__main__":
     concerts = fetch_concerts()
-    print(concerts[9].shorthand())
+    print(concerts[0].shorthand)
