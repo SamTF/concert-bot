@@ -60,6 +60,20 @@ class Concert:
 
         # returning the data
         return band, time, venue, region
+    
+    def shorthand(self) -> str:
+        '''
+        Succinct version of the concert info displaying only date and headliner.
+        '''
+        date_str = datetime.strftime(self.date, '%d/%m/%y')
+
+        s = f'**{date_str}** - {self.band[0]})'
+
+        if len(self.band) > 1:
+            other_bands = len(self.band) - 1
+            s += f' [+{other_bands}]'
+        
+        return s
         
     
 
@@ -92,14 +106,13 @@ def fetch_concerts() -> List[Concert]:
         x = Concert(date, concert_title)
         concerts.append(x)
     
+    # filtering out past concerts
+    concerts = [c for c in concerts if c.date > datetime.today()]
+    
     return concerts
 
 
-
-concerts = fetch_concerts()
-print(concerts[0])
-
-# filtering out past concerts
-concerts = [c for c in concerts if c.date > datetime.today()]
-
-print(concerts[0])
+# When running the script directly
+if __name__ == "__main__":
+    concerts = fetch_concerts()
+    print(concerts[9].shorthand())
