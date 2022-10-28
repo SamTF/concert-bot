@@ -48,7 +48,8 @@ class Concert:
 
         # 2. getting the bands
         band = split_str[0] if not '),' in split_str[0] else split_str[0].split('),')
-        band = [b.strip() for b in band]
+        if type(band) == list:
+            band = [b.strip() for b in band]
 
         # 3. getting the time, venue, region
         venue_data = re.split('\sim\s|in der|auf dem|/', split_str[-1])
