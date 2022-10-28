@@ -54,17 +54,22 @@ async def on_ready():
 ])
 @app_commands.guilds(discord.Object(id=349267379991347200))
 async def concerts(ctx, time_period:app_commands.Choice[str], fruits: Literal['apple', 'banana', 'cherry']):
+    '''
+    Displays shorthand information for all concerts taking place in the requested period of time.
+    '''
     today = datetime.today()
-    print(time_period.value)
+
+    print(f'>>> Requesting {time_period.value} concerts by {ctx.author.name}')
 
     concerts =[]
-    if time_period.value == 'weekly':
-        print('>>> WEEKLY')
-        concerts = [c for c in CONCERTS if (c.date - today).days <= 7]
-    elif time_period.value == 'monthly':
-        concerts = [c for c in CONCERTS if c.date.month == today.month]
-    else:
-        concerts = CONCERTS
+
+    match time_period.value:
+        case 'weekly':
+            concerts = [c for c in CONCERTS if (c.date - today).days <= 7]
+        case 'monthly':
+            concerts = [c for c in CONCERTS if c.date.month == today.month]
+        case _:
+            concerts = CONCERTS
     
     msg = ''
     for c in concerts:
