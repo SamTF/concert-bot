@@ -47,9 +47,15 @@ class Concert:
         split_str = re.split('ab\s', concert_title)
 
         # 2. getting the bands
-        band = split_str[0] if not '),' in split_str[0] else split_str[0].split('),')
-        if type(band) == list:
-            band = [b.strip() for b in band]
+        band = [split_str[0]] if not '),' in split_str[0] else split_str[0].split('),')
+        
+        # removing leading whitespace and fixing umlauts
+        band = [
+            b.strip()
+                .replace('Ã¶', 'ö')
+                .replace('Ã¼', 'ü') 
+            for b in band
+        ]
 
         # 3. getting the time, venue, region
         venue_data = re.split('\sim\s|in der|auf dem|/', split_str[-1])
@@ -122,4 +128,7 @@ def fetch_concerts() -> List[Concert]:
 # When running the script directly
 if __name__ == "__main__":
     concerts = fetch_concerts()
-    print(concerts[0].shorthand)
+    print(concerts[6].shorthand)
+
+    for c in concerts:
+        print(c.shorthand)
