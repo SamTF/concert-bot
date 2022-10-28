@@ -1,6 +1,7 @@
 ### IMPORTS        ############################################################
 from typing import Literal
-# import punk_scraper
+import punk_scraper
+from datetime import datetime
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -8,6 +9,7 @@ from discord import app_commands
 
 ###### CONSTANTS        ##########################################################
 TOKEN_FILE = '.concert_buddy.token'
+CONCERTS = None
 
 
 ###### DISCORD STUFF ############################################################
@@ -35,6 +37,10 @@ bot = Bot()
 async def on_ready():
     print("Ready to rock out!")
     print(bot.user.name)
+
+    global CONCERTS
+    CONCERTS = punk_scraper.fetch_concerts()
+
     await bot.change_presence(activity=discord.Game('🤘 Rockin\' out 🤘'))
 
 
@@ -48,7 +54,25 @@ async def on_ready():
 ])
 @app_commands.guilds(discord.Object(id=349267379991347200))
 async def concerts(ctx, time_period:app_commands.Choice[str], fruits: Literal['apple', 'banana', 'cherry']):
-    await ctx.send(f"test test test **{time_period.value}:** *{fruits}*")
+    today = datetime.today()
+    print(time_period.value)
+
+    concerts =[]
+    if time_period.value == 'weekly':
+        print('>>> WEEKLY')
+        concerts = [c for c in CONCERTS if (c.date - today).days <= 7]
+    elif time_period.value == 'monthly':
+        concerts = [c for c in CONCERTS if c.date.month == today.month]
+    else:
+        concerts = CONCERTS
+    
+    msg = ''
+    for c in concerts:
+        msg += c.shorthand + '\n'
+
+    print(msg)
+
+    await ctx.send(f"{msg}")
 
 
 ###### RUNNING THE BOT #################################################
