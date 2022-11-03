@@ -101,9 +101,11 @@ async def concert(ctx, concert_id: int):
         await ctx.send(f'No concert with ID **{concert_id}** was found. Try again :)')
         return
     
+    # getting concert info
     concert = CONCERTS[concert_id]
     date_str = datetime.strftime(concert.date, '%d/%m/%y')
     band = re.sub("\(.*$", "", concert.band[0]).title().strip()
+    thumb_url = thumb_scraper.get_thumb(band)
 
     # sending concert info as an embed
     embed = discord.Embed(
@@ -112,6 +114,7 @@ async def concert(ctx, concert_id: int):
         colour=0xff0062,
         url="http://www.punkstelle.de/"
     )
+    embed.set_thumbnail(url=thumb_url)
 
     await ctx.send(embed = embed)
 
