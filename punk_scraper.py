@@ -24,10 +24,10 @@ class Concert:
 
     def __repr__(self) -> str:
         date_str = datetime.strftime(self.date, '%d/%m/%y')
-        s = f'{date_str}\n'
+        s = f'**{date_str}**\n\n'
         for b in self.band:
             s += f'- {b})\n'
-        s += f'{self.time} @ {self.venue}\n'
+        s += f'\n*{self.time} @ {self.venue}*\n'
         s += f'{self.region}'
 
         return s
