@@ -61,15 +61,15 @@ async def concerts(ctx, time_period:app_commands.Choice[str], fruits: Literal['a
 
     print(f'>>> Requesting {time_period.value} concerts by {ctx.author.name}')
 
-    concerts =[]
+    concerts = []
 
     match time_period.value:
         case 'weekly':
-            concerts = [c for c in CONCERTS if (c.date - today).days <= 7]
+            concerts = [c for c in CONCERTS.values() if (c.date - today).days <= 7]
         case 'monthly':
-            concerts = [c for c in CONCERTS if c.date.month == today.month]
+            concerts = [c for c in CONCERTS.values() if c.date.month == today.month]
         case _:
-            concerts = CONCERTS
+            concerts = CONCERTS.values()
     
     msg = ''
     for c in concerts:

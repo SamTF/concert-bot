@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 import re
 import itertools
 
@@ -92,7 +92,7 @@ class Concert:
 
 
 ### SCRAPING WEB DATA
-def fetch_concerts() -> List[Concert]:
+def fetch_concerts() -> Dict[int, Concert]:
     # getting the website source code
     source = requests.get('http://www.punkstelle.de/').text
 
@@ -121,6 +121,9 @@ def fetch_concerts() -> List[Concert]:
     
     # filtering out past concerts
     concerts = [c for c in concerts if c.date > datetime.today()]
+
+    # creating a dictonary indexed by concert id
+    concerts = {c.id : c for c in concerts}
     
     return concerts
 
@@ -130,5 +133,5 @@ if __name__ == "__main__":
     concerts = fetch_concerts()
     print(concerts[6].shorthand)
 
-    for c in concerts:
+    for c in concerts.values():
         print(c.shorthand)
