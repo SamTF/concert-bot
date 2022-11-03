@@ -45,6 +45,7 @@ async def on_ready():
 
 
 ###### COMMANDS        #######################################################
+### /concerts
 @bot.hybrid_command(name = 'concerts', description = 'Check out all the cool concerts in the area!')
 @app_commands.describe(time_period = 'Check for concerts how far out?')
 @app_commands.choices(time_period=[
@@ -78,6 +79,24 @@ async def concerts(ctx, time_period:app_commands.Choice[str], fruits: Literal['a
     print(msg)
 
     await ctx.send(f"{msg}")
+
+
+### /concert
+@bot.hybrid_command(name = 'concert', description = 'Display detailed info on one specific concert')
+@app_commands.guilds(discord.Object(id=349267379991347200))
+async def concert(ctx, concert_id: int):
+    '''
+    Display detailed info on one specific concert
+    '''
+
+    # checking if ID exists
+    if not concert_id in CONCERTS:
+        await ctx.send(f'No concert with ID **{concert_id}** was found. Try again :)')
+        return
+    
+    # sending concert info
+    await ctx.send( CONCERTS[concert_id] )
+
 
 
 ###### RUNNING THE BOT #################################################
