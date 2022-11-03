@@ -1,7 +1,14 @@
 ### IMPORTS        ############################################################
-from typing import Literal
+### My modules
 import punk_scraper
+import thumb_scraper
+
+### Stdlib
 from datetime import datetime
+from typing import Literal
+import re
+
+### Discord
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -94,8 +101,19 @@ async def concert(ctx, concert_id: int):
         await ctx.send(f'No concert with ID **{concert_id}** was found. Try again :)')
         return
     
-    # sending concert info
-    await ctx.send( CONCERTS[concert_id] )
+    concert = CONCERTS[concert_id]
+    date_str = datetime.strftime(concert.date, '%d/%m/%y')
+    band = re.sub("\(.*$", "", concert.band[0]).title().strip()
+
+    # sending concert info as an embed
+    embed = discord.Embed(
+        title=band,
+        description=concert,
+        colour=0xff0062,
+        url="http://www.punkstelle.de/"
+    )
+
+    await ctx.send(embed = embed)
 
 
 
