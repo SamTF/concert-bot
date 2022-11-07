@@ -14,13 +14,15 @@ class Concert:
     time = None
     venue = None
     region = None
+    url = None
 
     id_counter = itertools.count()
 
-    def __init__(self, date:str, concert:str) -> None:
+    def __init__(self, date:str, concert:str, url:str) -> None:
         self.date = self._date_from_string(date)
         self.band, self.time, self.venue, self.region = self._parse_concert_title(concert)
         self.id = next(self.id_counter)
+        self.url = url
 
     def __repr__(self) -> str:
         date_str = datetime.strftime(self.date, '%d/%m/%y')
@@ -115,8 +117,9 @@ def fetch_concerts() -> Dict[int, Concert]:
     for concert in filtered_events:
         date = concert.find('div', class_='date').text
         concert_title = concert.find('div', class_='concert-title').text
+        url = concert.find('a').get('href')
 
-        x = Concert(date, concert_title)
+        x = Concert(date, concert_title, url)
         concerts.append(x)
     
     # filtering out past concerts
@@ -131,7 +134,6 @@ def fetch_concerts() -> Dict[int, Concert]:
 # When running the script directly
 if __name__ == "__main__":
     concerts = fetch_concerts()
-    print(concerts[6].shorthand)
 
     for c in concerts.values():
         print(c.shorthand)
