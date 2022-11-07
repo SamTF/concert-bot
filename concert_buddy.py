@@ -112,11 +112,12 @@ async def concert(ctx, concert_id: int):
         title=band,
         description=concert,
         colour=0xff0062,
-        url="http://www.punkstelle.de/"
+        url=concert.url
     )
     embed.set_thumbnail(url=thumb_url)
 
     await ctx.send(embed = embed)
+    #https://plainenglish.io/blog/send-an-embed-with-a-discord-bot-in-python
 
 
 
